@@ -51,6 +51,7 @@ async function main() {
     try {
       const res = await fetch(shop.source, {
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JiroStatusBoardBot/1.0)' },
+        signal: AbortSignal.timeout(15000),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const html = await res.text();
