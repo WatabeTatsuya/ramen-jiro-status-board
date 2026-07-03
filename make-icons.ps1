@@ -3,9 +3,9 @@ Add-Type -AssemblyName System.Drawing
 $outDir = Join-Path $PSScriptRoot "icons"
 if (-not (Test-Path $outDir)) { New-Item -ItemType Directory -Path $outDir | Out-Null }
 
-$ink = [System.Drawing.Color]::FromArgb(255, 0x17, 0x25, 0x42)
+$yellow = [System.Drawing.Color]::FromArgb(255, 0xf5, 0xc5, 0x18)
 $jiroRed = [System.Drawing.Color]::FromArgb(255, 0xcf, 0x36, 0x27)
-$white = [System.Drawing.Color]::White
+$black = [System.Drawing.Color]::FromArgb(255, 0x1a, 0x1a, 0x1a)
 
 function New-Icon {
     param(
@@ -20,7 +20,7 @@ function New-Icon {
     $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
 
     # background
-    $bgBrush = New-Object System.Drawing.SolidBrush($ink)
+    $bgBrush = New-Object System.Drawing.SolidBrush($yellow)
     $g.FillRectangle($bgBrush, 0, 0, $Size, $Size)
 
     # red circle (kept within safe zone for maskable icons: ~72% of full size, centered)
@@ -32,12 +32,12 @@ function New-Icon {
     # text "二郎"
     $fontSize = [float]($Size * 0.30)
     $font = New-Object System.Drawing.Font("Yu Gothic", $fontSize, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
-    $whiteBrush = New-Object System.Drawing.SolidBrush($white)
+    $blackBrush = New-Object System.Drawing.SolidBrush($black)
     $text = "二郎"
     $textSize = $g.MeasureString($text, $font)
     $x = ($Size - $textSize.Width) / 2
     $y = ($Size - $textSize.Height) / 2
-    $g.DrawString($text, $font, $whiteBrush, $x, $y)
+    $g.DrawString($text, $font, $blackBrush, $x, $y)
 
     $bmp.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png)
 
@@ -45,7 +45,7 @@ function New-Icon {
     $bmp.Dispose()
     $bgBrush.Dispose()
     $redBrush.Dispose()
-    $whiteBrush.Dispose()
+    $blackBrush.Dispose()
     $font.Dispose()
 }
 
