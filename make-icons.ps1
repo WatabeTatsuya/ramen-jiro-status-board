@@ -34,10 +34,11 @@ function New-Icon {
     $font = New-Object System.Drawing.Font("Yu Gothic", $fontSize, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
     $blackBrush = New-Object System.Drawing.SolidBrush($black)
     $text = "二郎"
-    $textSize = $g.MeasureString($text, $font)
-    $x = ($Size - $textSize.Width) / 2
-    $y = ($Size - $textSize.Height) / 2
-    $g.DrawString($text, $font, $blackBrush, $x, $y)
+    $format = New-Object System.Drawing.StringFormat
+    $format.Alignment = [System.Drawing.StringAlignment]::Center
+    $format.LineAlignment = [System.Drawing.StringAlignment]::Center
+    $rect = New-Object System.Drawing.RectangleF(0, 0, $Size, $Size)
+    $g.DrawString($text, $font, $blackBrush, $rect, $format)
 
     $bmp.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png)
 
@@ -47,6 +48,7 @@ function New-Icon {
     $redBrush.Dispose()
     $blackBrush.Dispose()
     $font.Dispose()
+    $format.Dispose()
 }
 
 New-Icon -Size 192 -Path (Join-Path $outDir "icon-192.png")
