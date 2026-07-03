@@ -6,7 +6,7 @@
 <title>ラーメン二郎 営業状況ボード</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#172542">
+<meta name="theme-color" content="#9c150a">
 
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -16,23 +16,25 @@
 <meta name="apple-mobile-web-app-title" content="二郎営業状況">
 <style>
   :root{
-    --paper: #f2f3f0;
-    --paper-deep: #e3e6e1;
-    --ink: #172542;
-    --ink-soft: #4b5972;
-    --jiro-red: #cf3627;
+    --paper: #fff6dc;
+    --paper-deep: #ffe392;
+    --ink: #2a1305;
+    --ink-soft: #6b4a24;
+    --jiro-red: #d81f11;
+    --jiro-red-deep: #9c150a;
+    --jiro-yellow: #ffc72c;
     --open-green: #3d6b46;
     --open-green-deep: #2a4a31;
-    --closed-slate: #5a6478;
-    --line: #cfd4d0;
-    --card-bg: #fbfbf9;
+    --closed-slate: #8a7350;
+    --line: #f0cf6a;
+    --card-bg: #fffdf3;
   }
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
   body{
     background: var(--paper);
     background-image:
-      radial-gradient(circle at 1px 1px, rgba(23,37,66,0.06) 1px, transparent 0);
+      radial-gradient(circle at 1px 1px, rgba(216,31,17,0.08) 1px, transparent 0);
     background-size: 14px 14px;
     color: var(--ink);
     font-family: "Hiragino Sans", "Yu Gothic", "Segoe UI", system-ui, sans-serif;
@@ -41,19 +43,38 @@
   .page{ max-width: 1120px; margin: 0 auto; padding: 0 20px 64px; }
 
   .board-header{
-    background: var(--ink);
+    background: var(--jiro-red-deep);
     color: var(--paper);
     margin: 0 -20px 28px;
     padding: 36px 20px 28px;
-    border-bottom: 6px solid var(--jiro-red);
+    border-bottom: 6px solid var(--jiro-yellow);
   }
-  .header-inner{ max-width: 1120px; margin: 0 auto; }
+  .header-inner{ max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 28px; }
+  .header-text{ flex: 1 1 auto; min-width: 0; }
+  .header-photo{
+    flex: none;
+    width: 160px;
+    height: 160px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 4px solid var(--jiro-yellow);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  }
+  .header-photo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  @media (max-width: 640px){
+    .header-photo{ display: none; }
+  }
   .eyebrow{
     margin: 0 0 6px;
     font-size: 11px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #e5836f;
+    color: var(--jiro-yellow);
     font-weight: 700;
   }
   h1{
@@ -68,7 +89,7 @@
     align-items: baseline;
     gap: 14px;
     flex-wrap: wrap;
-    border-top: 1px solid rgba(242,243,240,0.22);
+    border-top: 1px solid rgba(255,255,255,0.28);
     padding-top: 14px;
   }
   .clock{
@@ -78,12 +99,12 @@
     font-weight: 700;
     letter-spacing: 0.03em;
   }
-  .clock-date{ font-size: 14px; color: #b9c4d9; }
+  .clock-date{ font-size: 14px; color: #ffe9b0; }
   .disclaimer{
     margin: 14px 0 0;
     font-size: 12.5px;
     line-height: 1.6;
-    color: #c6cfdf;
+    color: #ffe9b0;
     max-width: 70ch;
   }
 
@@ -184,6 +205,39 @@
     border-bottom: 1px solid var(--line);
   }
   .shop-list li:last-child{ border-bottom: none; }
+  .shop-card-inner{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .card-content{ flex: 1 1 auto; min-width: 0; }
+  .card-photo{
+    flex: none;
+    width: 92px;
+    height: 92px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid var(--jiro-red);
+    background: var(--paper-deep);
+  }
+  .card-photo img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-placeholder{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+  }
+  @media (max-width: 480px){
+    .card-photo{ width: 72px; height: 72px; }
+    .photo-placeholder{ font-size: 26px; }
+  }
   .card-top{
     display: flex;
     align-items: center;
@@ -312,13 +366,18 @@
 <div class="page">
   <header class="board-header">
     <div class="header-inner">
-      <p class="eyebrow">RAMEN JIRO STATUS BOARD</p>
-      <h1>ラーメン二郎 営業状況一覧</h1>
-      <div class="clock-row">
-        <span class="clock" id="clock">--:--:--</span>
-        <span class="clock-date" id="clock-date">-</span>
+      <div class="header-text">
+        <p class="eyebrow">RAMEN JIRO STATUS BOARD</p>
+        <h1>ラーメン二郎 営業状況一覧</h1>
+        <div class="clock-row">
+          <span class="clock" id="clock">--:--:--</span>
+          <span class="clock-date" id="clock-date">-</span>
+        </div>
+        <p class="disclaimer">タブの振り分けは通常の営業時間・定休日をもとにした自動判定(目安)です。スープ・麺切れによる早終いや臨時休業はここには反映されません。判明している店舗はカード内の「𝕏 最新投稿を見る」ボタンから公式Xの投稿ページを新しいタブで開けます(未対応の店舗はInstagramでご確認ください)。</p>
       </div>
-      <p class="disclaimer">タブの振り分けは通常の営業時間・定休日をもとにした自動判定(目安)です。スープ・麺切れによる早終いや臨時休業はここには反映されません。判明している店舗はカード内の「𝕏 最新投稿を見る」ボタンから公式Xの投稿ページを新しいタブで開けます(未対応の店舗はInstagramでご確認ください)。</p>
+      <div class="header-photo">
+        <img src="https://webdesign-gourmet.com/wp-content/uploads/ramen-jiro-koiwa-01.jpg" alt="ラーメン二郎のボリューム満点のラーメン" referrerpolicy="no-referrer" onerror="this.closest('.header-photo').style.display='none'">
+      </div>
     </div>
   </header>
 
@@ -383,52 +442,52 @@ function regionOf(area){
 }
 
 const SHOPS = [
-  {"name":"三田本店","area":"東京都港区三田/都営三田線・三田駅、JR田町駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"08:30","close":"15:00"},{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:00","close":"20:00"}],"closedDays":["sun"],"closedNote":"祝日も休みの場合が多い","source":"https://www.ramenjiro-pleasure.com/info_mitahontenjiro/","twitter":null,"instagram":null},
-  {"name":"目黒店","area":"東京都目黒区/JR目黒駅・中目黒駅","hours":[{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"16:00"},{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"18:00","close":"23:00"}],"closedDays":[],"closedNote":"基本無休。臨時休業はXの投稿で確認","source":"https://ramen-jiro-pc3.com/en/meguro/","twitter":"meguro_jiro","instagram":null},
-  {"name":"仙川店","area":"東京都調布市/京王線 仙川駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:00","close":"21:00"}],"closedDays":["sun"],"closedNote":"祝日休みの場合あり","source":"https://jiro-matome.com/store-info/","twitter":"senjiro26","instagram":null},
-  {"name":"新宿歌舞伎町店","area":"東京都新宿区/西武新宿線・新宿駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:30","close":"02:30","closesNextDay":true}],"closedDays":["wed"],"closedNote":"閉店時刻は深夜2:30(翌日扱い)。不定休の情報もあり","source":"https://jiro-matome.com/store-info/","twitter":"kabujiikeji","instagram":null},
-  {"name":"品川店","area":"東京都品川区/京急本線 北品川駅、JR品川駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"10:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"10:00","close":"14:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"shinagawa26","instagram":null},
-  {"name":"新宿小滝橋通り店","area":"東京都新宿区/JR・西武新宿線 新宿駅","hours":[{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"22:00"}],"closedDays":[],"closedNote":"元日のみ休みという情報あり。基本無休","source":"https://www.ziroramen.jp/jiro-ramen-official-shops-guide/","twitter":"jiro_otakibasi","instagram":null},
-  {"name":"環七新代田店","area":"東京都世田谷区/京王井の頭線 新代田駅","hours":[{"days":["tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"15:00"}],"closedDays":["mon"],"closedNote":"祝日休みの場合あり","source":"https://jiro-matome.com/store-info/","twitter":"26shinshindaita","instagram":null},
-  {"name":"八王子野猿街道店","area":"東京都八王子市/京王相模原線 京王堀之内駅","hours":[{"days":["tue","wed","thu","fri"],"open":"11:00","close":"15:00"},{"days":["tue","wed","thu","fri"],"open":"17:30","close":"21:00"},{"days":["sat"],"open":"11:00","close":"20:00"},{"days":["sun"],"open":"09:00","close":"16:00"}],"closedDays":["mon"],"closedNote":"祝日は土曜と同様の時間で営業との情報あり","source":"https://jiro-matome.com/store-info/","twitter":"Jiro_Yaenkaido2","instagram":"yaen0828"},
-  {"name":"池袋東口店","area":"東京都豊島区/JR池袋駅東口","hours":[{"days":["mon","wed","thu","fri","sat","sun"],"open":"10:30","close":"16:30"}],"closedDays":["tue"],"closedNote":"2025年9月17日改定。火曜が祝日の場合は翌水曜が振替休日","source":"https://www.ramen-jiro.com/information.html","twitter":"ikejikabuji","instagram":null},
-  {"name":"亀戸店","area":"東京都江東区/JR亀戸駅","hours":[{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"17:30","close":"21:00"}],"closedDays":[],"closedNote":"無休(不定休の情報もあり)","source":"https://jiro-matome.com/store-info/","twitter":"jiro_kame","instagram":"jiro_kame"},
-  {"name":"府中店","area":"東京都府中市/京王線・JR南武線 府中駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"22:00"}],"closedDays":["sat","sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_fuchu","instagram":null},
-  {"name":"めじろ台店","area":"東京都八王子市/京王線 めじろ台駅","hours":[{"days":["mon","tue"],"open":"11:00","close":"14:30"},{"days":["mon","tue"],"open":"17:30","close":"20:30"},{"days":["wed","fri","sat"],"open":"11:30","close":"14:30"},{"days":["wed","fri","sat"],"open":"18:00","close":"21:00"},{"days":["sun"],"open":"11:00","close":"15:00"}],"closedDays":["thu"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"mejirodai_jiro","instagram":null},
-  {"name":"荻窪店","area":"東京都杉並区/JR中央線 荻窪駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:30","close":"14:15"},{"days":["mon","tue","wed","thu","fri","sat"],"open":"18:00","close":"21:45"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"ogkb_jiro","instagram":"ogkbjiro"},
-  {"name":"上野毛店","area":"東京都世田谷区/東急大井町線 上野毛駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:15"},{"days":["mon","tue","wed","thu","fri"],"open":"18:00","close":"22:00"},{"days":["sat"],"open":"11:00","close":"14:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"kaminogeJiro","instagram":null},
-  {"name":"環七一之江店","area":"東京都江戸川区/都営新宿線 一之江駅","hours":[{"days":["mon","tue","thu","fri"],"open":"10:30","close":"14:00"},{"days":["mon","tue","thu","fri"],"open":"17:30","close":"20:30"},{"days":["sat","sun"],"open":"09:00","close":"14:00"}],"closedDays":["wed"],"closedNote":"祝日は土日と同様の時間で営業との情報あり","source":"https://jiro-matome.com/store-info/","twitter":"ichinoejiro","instagram":null},
-  {"name":"神田神保町店","area":"東京都千代田区/都営三田線 神保町駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:00","close":"17:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jbc_ramen_jiro","instagram":null},
-  {"name":"小岩店","area":"東京都江戸川区/JR小岩駅","hours":[{"days":["tue","wed","thu","fri"],"open":"10:30","close":"14:30"},{"days":["sat"],"open":"15:00","close":"16:30"}],"closedDays":["mon","sun"],"closedNote":"祝日休み。火〜金の閉店時刻は麺切れ次第のため14:00〜15:00頃が目安(14:30は目安値)。土曜は公式X予約制テイクアウトのみで受取15:00〜16:30(この時間帯は変動の可能性あり)","source":"https://x.com/koiwajiro","twitter":"koiwajiro","instagram":null},
-  {"name":"ひばりヶ丘駅前店","area":"東京都西東京市/西武池袋線 ひばりヶ丘駅","hours":[{"days":["mon","tue","thu","fri"],"open":"11:30","close":"14:30"},{"days":["mon","tue","thu","fri"],"open":"18:00","close":"21:00"},{"days":["wed"],"open":"11:30","close":"14:30"},{"days":["sat"],"open":"11:00","close":"17:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"Aarf0xvdBXkWd7o","instagram":null},
-  {"name":"桜台駅前店","area":"東京都練馬区/西武池袋線 桜台駅","hours":[{"days":["mon","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","wed","thu","fri"],"open":"17:30","close":"21:00"},{"days":["sat","sun"],"open":"10:00","close":"16:00"}],"closedDays":["tue"],"closedNote":"祝日休み。※2025年3月頃に閉店したとの情報あり(要現地確認)","source":"https://jiro-matome.com/store-info/","twitter":null,"instagram":null},
-  {"name":"西台駅前店","area":"東京都板橋区/都営三田線 西台駅","hours":[{"days":["mon","tue","thu","fri"],"open":"11:00","close":"13:30"},{"days":["mon","tue","thu","fri"],"open":"17:30","close":"20:30"},{"days":["wed"],"open":"11:00","close":"13:30"},{"days":["sat"],"open":"09:30","close":"12:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_nishidai","instagram":null},
-  {"name":"一橋学園店","area":"東京都小平市/西武多摩湖線 一橋学園駅","hours":[{"days":["mon","tue","wed","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","fri"],"open":"17:30","close":"20:30"},{"days":["sat"],"open":"11:00","close":"15:00"},{"days":["sun"],"open":"11:00","close":"16:00"}],"closedDays":["thu"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":"1284jiro","instagram":null},
-  {"name":"立川店","area":"東京都立川市/JR立川駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:00","close":"14:30"},{"days":["mon","tue","thu","fri","sat","sun"],"open":"17:30","close":"20:30"}],"closedDays":["wed"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jirotachikawa","instagram":"tachikawajiro"},
-  {"name":"千住大橋駅前店","area":"東京都足立区/京成本線 千住大橋駅","hours":[{"days":["mon","tue","wed","fri"],"open":"10:30","close":"15:30"}],"closedDays":["thu","sat","sun"],"closedNote":"祝日休み。土曜はテイクアウト販売のみとの情報あり","source":"https://www.ramenjiro-pleasure.com/info_senjuoohashiekimaejiro/","twitter":"senjujirou26","instagram":null},
-  {"name":"京急川崎店","area":"神奈川県川崎市川崎区/京急本線 京急川崎駅、JR川崎駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"18:00","close":"22:00"},{"days":["sat"],"open":"11:00","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_kwsk_bot","instagram":null},
-  {"name":"相模大野店","area":"神奈川県相模原市南区/小田急線 相模大野駅","hours":[{"days":["tue"],"open":"10:20","close":"14:00"},{"days":["wed","thu"],"open":"10:20","close":"14:00"},{"days":["wed","thu"],"open":"17:00","close":"20:30"},{"days":["fri"],"open":"17:00","close":"20:30"},{"days":["sat","sun"],"open":"10:00","close":"15:00"}],"closedDays":["mon"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"sumo_jiro","instagram":null},
-  {"name":"横浜関内店","area":"神奈川県横浜市中区/JR根岸線 関内駅、伊勢佐木長者町駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:00","close":"14:30"},{"days":["mon","tue","thu","fri","sat","sun"],"open":"17:00","close":"21:00"}],"closedDays":["wed"],"closedNote":"祝日は営業(日曜同様の扱い)","source":"https://jiro-matome.com/store-info/","twitter":"kannaijiro","instagram":"kannaijiro"},
-  {"name":"中山駅前店","area":"神奈川県横浜市緑区/JR横浜線 中山駅","hours":[{"days":["mon","tue","wed","fri","sat","sun"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","fri","sat","sun"],"open":"18:00","close":"21:30"}],"closedDays":["thu"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":"NKYMJIRO","instagram":null},
-  {"name":"生田店","area":"神奈川県川崎市多摩区/小田急線 生田駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:00","close":"15:00"},{"days":["mon","tue","thu","fri","sat","sun"],"open":"18:00","close":"21:00"}],"closedDays":["wed"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"ikuta_jiro","instagram":"ikuta_jiro"},
-  {"name":"湘南藤沢店","area":"神奈川県藤沢市/小田急線・JR藤沢駅","hours":[{"days":["mon","wed","thu","fri","sat"],"open":"11:00","close":"14:30"},{"days":["mon","wed","thu","fri","sat"],"open":"17:00","close":"21:00"},{"days":["sun"],"open":"11:00","close":"21:00"}],"closedDays":["tue"],"closedNote":null,"source":"https://note.com/koronkoro/n/n7846c0131bd0","twitter":"fujirow26","instagram":null},
-  {"name":"松戸駅前店","area":"千葉県松戸市/JR松戸駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:30","close":"21:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"matsudojiro3","instagram":"mtdjiro"},
-  {"name":"京成大久保店","area":"千葉県船橋市/京成本線 京成大久保駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:00","close":"15:00"}],"closedDays":["sun"],"closedNote":"祝日休み。※公式X(@OKB26)は更新頻度が低い可能性があります","source":"https://jiro-matome.com/store-info/","twitter":"OKB26","instagram":null},
-  {"name":"柏店","area":"千葉県柏市/つくばエクスプレス 柏の葉キャンパス駅","hours":[{"days":["tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"15:00"},{"days":["tue","wed","thu","fri","sat","sun"],"open":"17:30","close":"21:30"}],"closedDays":["mon"],"closedNote":"時間は目安(公式が「頃」と表記しており前後する)","source":"https://jiro-matome.com/store-info/","twitter":"genkimoriya","instagram":null},
-  {"name":"千葉店","area":"千葉県千葉市中央区/千葉都市モノレール 葭川公園駅、JR千葉駅・千葉中央駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:00","close":"14:30"},{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:00","close":"21:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_chiba","instagram":null},
-  {"name":"川越店","area":"埼玉県川越市/JR・東武東上線 川越駅","hours":[{"days":["tue","wed","thu","fri","sat"],"open":"11:00","close":"14:00"},{"days":["tue","wed","thu","fri","sat"],"open":"18:00","close":"21:00"},{"days":["sun"],"open":"11:00","close":"14:00"}],"closedDays":["mon"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":"kwge26","instagram":null},
-  {"name":"越谷店","area":"埼玉県越谷市/東武スカイツリーライン 越谷駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:30","close":"19:00"}],"closedDays":["sat","sun"],"closedNote":"祝日は10:00-15:00で特別営業","source":"https://jiro-matome.com/store-info/","twitter":"ksgy26","instagram":null},
-  {"name":"大宮公園駅前店","area":"埼玉県さいたま市大宮区/東武アーバンパークライン 大宮公園駅","hours":[{"days":["mon","tue","thu","fri","sat"],"open":"11:30","close":"14:30"},{"days":["mon","tue","thu","fri","sat"],"open":"17:30","close":"21:00"},{"days":["sun"],"open":"11:00","close":"15:00"}],"closedDays":["wed"],"closedNote":"祝日は日曜と同様の時間で営業","source":"https://jiro-matome.com/store-info/","twitter":"omiyapark26","instagram":null},
-  {"name":"栃木街道店","area":"栃木県下都賀郡壬生町","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:30","close":"14:45"},{"days":["mon","tue","wed","thu","fri"],"open":"18:00","close":"21:00"},{"days":["sat"],"open":"11:30","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"Tochigikaidoten","instagram":"tochigikaidoten2007"},
-  {"name":"前橋千代田町店","area":"群馬県前橋市/上毛電鉄 中央前橋駅","hours":[{"days":["tue","fri","sat","sun"],"open":"10:30","close":"14:30"},{"days":["tue","fri","sat","sun"],"open":"17:00","close":"20:00"},{"days":["wed","thu"],"open":"10:30","close":"14:30"}],"closedDays":["mon"],"closedNote":"月曜定休(祝日時の振替休日は未確認)。水・木は昼の部のみで夜営業なしとの情報あり(情報源により火〜日一律2部制との記載もあり要確認)。材料切れの場合は早仕舞いあり","source":"https://x.com/SnBZt6eRCdz7lQw","twitter":"SnBZt6eRCdz7lQw","instagram":null},
-  {"name":"ひたちなか店","area":"茨城県ひたちなか市/JR勝田駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:30"},{"days":["mon","tue","wed","thu","fri"],"open":"17:30","close":"21:00"},{"days":["sat"],"open":"10:00","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日は土曜と同様の時間で営業","source":"https://jiro-matome.com/store-info/","twitter":"26_hitachinaka","instagram":null},
-  {"name":"仙台店","area":"宮城県仙台市/地下鉄東西線 大町西公園駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:30","close":"14:30"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"11:30","close":"21:00"},{"days":["sun"],"open":"11:30","close":"19:30"}],"closedDays":[],"closedNote":"基本無休。祝日は日曜と同様の時間で営業","source":"https://jiro-matome.com/store-info/","twitter":"jiro_sendai1023","instagram":"jiro_sendai"},
-  {"name":"札幌店","area":"北海道札幌市/JR札幌駅、地下鉄さっぽろ駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"20:30"},{"days":["sat"],"open":"11:00","close":"15:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_sapporo_","instagram":null},
-  {"name":"会津若松駅前店","area":"福島県会津若松市/JR会津若松駅","hours":[{"days":["tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"11:00","close":"20:00"}],"closedDays":["mon"],"closedNote":"日曜・祝日は基本休みだが第2・4日曜のみ11:00-20:00で特別営業(不定休寄り)","source":"https://jiro-matome.com/store-info/","twitter":"aizu_jiro","instagram":"aizu_jiro26"},
-  {"name":"新潟店","area":"新潟県新潟市/JR新潟駅","hours":[{"days":["tue","wed","fri"],"open":"11:00","close":"14:00"},{"days":["tue","wed","fri"],"open":"16:30","close":"21:00"},{"days":["sat","sun"],"open":"10:00","close":"15:30"}],"closedDays":["mon","thu"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":null,"instagram":"jiro.niigata"},
-  {"name":"京都店","area":"京都府京都市左京区/叡山電鉄 一乗寺駅","hours":[{"days":["mon","tue","thu","fri","sat"],"open":"11:00","close":"14:00"},{"days":["mon","tue","thu","fri","sat"],"open":"18:00","close":"21:30"},{"days":["sun"],"open":"11:00","close":"14:30"},{"days":["sun"],"open":"17:30","close":"20:30"}],"closedDays":["wed"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_kyoto","instagram":null},
-  {"name":"朝倉街道駅前店","area":"福岡県筑紫野市/西鉄天神大牟田線 朝倉街道駅","hours":[{"days":["mon","tue","wed","fri","sat"],"open":"11:30","close":"14:30"},{"days":["mon","tue","wed","fri","sat"],"open":"17:30","close":"20:30"},{"days":["sun"],"open":"11:30","close":"14:30"}],"closedDays":["thu"],"closedNote":"祝日休み。2024年12月開業の九州初直系店","source":"https://jiro-matome.com/store-info/","twitter":"r26akgd","instagram":null},
-  {"name":"名古屋大曽根店","area":"愛知県名古屋市東区/JR中央本線・地下鉄名城線 大曽根駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"10:00","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日は土曜と同様の時間で営業。2025年11月開業の東海初直系店","source":"https://iekei.shop/jiro-ramen-shop-list","twitter":"jiro_NGY","instagram":null}
+  {"name":"三田本店","photo":"https://ikkos-films.com/wp-content/uploads/2026/01/img_3421-1.jpg","area":"東京都港区三田/都営三田線・三田駅、JR田町駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"08:30","close":"15:00"},{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:00","close":"20:00"}],"closedDays":["sun"],"closedNote":"祝日も休みの場合が多い","source":"https://www.ramenjiro-pleasure.com/info_mitahontenjiro/","twitter":null,"instagram":null},
+  {"name":"目黒店","photo":"https://food.sunrise033.com/wp-content/uploads/2019/04/20190822024238-1.webp","area":"東京都目黒区/JR目黒駅・中目黒駅","hours":[{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"16:00"},{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"18:00","close":"23:00"}],"closedDays":[],"closedNote":"基本無休。臨時休業はXの投稿で確認","source":"https://ramen-jiro-pc3.com/en/meguro/","twitter":"meguro_jiro","instagram":null},
+  {"name":"仙川店","photo":"https://ikkos-films.com/wp-content/uploads/2022/08/img_1689.jpg","area":"東京都調布市/京王線 仙川駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:00","close":"21:00"}],"closedDays":["sun"],"closedNote":"祝日休みの場合あり","source":"https://jiro-matome.com/store-info/","twitter":"senjiro26","instagram":null},
+  {"name":"新宿歌舞伎町店","photo":"https://stat.ameba.jp/user_images/20221226/14/r55jcw/27/0d/j/o1080081015221331379.jpg","area":"東京都新宿区/西武新宿線・新宿駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:30","close":"02:30","closesNextDay":true}],"closedDays":["wed"],"closedNote":"閉店時刻は深夜2:30(翌日扱い)。不定休の情報もあり","source":"https://jiro-matome.com/store-info/","twitter":"kabujiikeji","instagram":null},
+  {"name":"品川店","photo":"https://livedoor.blogimg.jp/interactive_salesmen/imgs/d/b/db6bd67a.jpg","area":"東京都品川区/京急本線 北品川駅、JR品川駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"10:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"10:00","close":"14:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"shinagawa26","instagram":null},
+  {"name":"新宿小滝橋通り店","photo":"https://livedoor.blogimg.jp/hanadamasaru1976/imgs/a/b/abd00aec.jpg","area":"東京都新宿区/JR・西武新宿線 新宿駅","hours":[{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"22:00"}],"closedDays":[],"closedNote":"元日のみ休みという情報あり。基本無休","source":"https://www.ziroramen.jp/jiro-ramen-official-shops-guide/","twitter":"jiro_otakibasi","instagram":null},
+  {"name":"環七新代田店","photo":"https://ikkos-films.com/wp-content/uploads/2025/08/img_3945.jpg","area":"東京都世田谷区/京王井の頭線 新代田駅","hours":[{"days":["tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"15:00"}],"closedDays":["mon"],"closedNote":"祝日休みの場合あり","source":"https://jiro-matome.com/store-info/","twitter":"26shinshindaita","instagram":null},
+  {"name":"八王子野猿街道店","photo":"https://webdesign-gourmet.com/wp-content/uploads/ramen-jiro-hachioji-yaen-kaido-02.jpg","area":"東京都八王子市/京王相模原線 京王堀之内駅","hours":[{"days":["tue","wed","thu","fri"],"open":"11:00","close":"15:00"},{"days":["tue","wed","thu","fri"],"open":"17:30","close":"21:00"},{"days":["sat"],"open":"11:00","close":"20:00"},{"days":["sun"],"open":"09:00","close":"16:00"}],"closedDays":["mon"],"closedNote":"祝日は土曜と同様の時間で営業との情報あり","source":"https://jiro-matome.com/store-info/","twitter":"Jiro_Yaenkaido2","instagram":"yaen0828"},
+  {"name":"池袋東口店","photo":"https://stat.ameba.jp/user_images/20240710/22/moyatorium/4b/fd/j/o1080066115461660348.jpg","area":"東京都豊島区/JR池袋駅東口","hours":[{"days":["mon","wed","thu","fri","sat","sun"],"open":"10:30","close":"16:30"}],"closedDays":["tue"],"closedNote":"2025年9月17日改定。火曜が祝日の場合は翌水曜が振替休日","source":"https://www.ramen-jiro.com/information.html","twitter":"ikejikabuji","instagram":null},
+  {"name":"亀戸店","photo":"https://stat.ameba.jp/user_images/20260419/13/r55jcw/b2/3f/j/o1080081015773000488.jpg","area":"東京都江東区/JR亀戸駅","hours":[{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri","sat","sun"],"open":"17:30","close":"21:00"}],"closedDays":[],"closedNote":"無休(不定休の情報もあり)","source":"https://jiro-matome.com/store-info/","twitter":"jiro_kame","instagram":"jiro_kame"},
+  {"name":"府中店","photo":"https://livedoor.blogimg.jp/zatsu_ke/imgs/1/5/15c7b3b7.jpg","area":"東京都府中市/京王線・JR南武線 府中駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"22:00"}],"closedDays":["sat","sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_fuchu","instagram":null},
+  {"name":"めじろ台店","photo":"https://stat.ameba.jp/user_images/20170529/15/shoko147cm/c6/00/j/o0480064113948499410.jpg","area":"東京都八王子市/京王線 めじろ台駅","hours":[{"days":["mon","tue"],"open":"11:00","close":"14:30"},{"days":["mon","tue"],"open":"17:30","close":"20:30"},{"days":["wed","fri","sat"],"open":"11:30","close":"14:30"},{"days":["wed","fri","sat"],"open":"18:00","close":"21:00"},{"days":["sun"],"open":"11:00","close":"15:00"}],"closedDays":["thu"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"mejirodai_jiro","instagram":null},
+  {"name":"荻窪店","photo":"https://livedoor.blogimg.jp/hanadamasaru1976/imgs/b/0/b0a7ca07-s.jpg","area":"東京都杉並区/JR中央線 荻窪駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:30","close":"14:15"},{"days":["mon","tue","wed","thu","fri","sat"],"open":"18:00","close":"21:45"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"ogkb_jiro","instagram":"ogkbjiro"},
+  {"name":"上野毛店","photo":"https://stat.ameba.jp/user_images/20251226/22/r55jcw/95/a5/j/o1080081015734260669.jpg","area":"東京都世田谷区/東急大井町線 上野毛駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:15"},{"days":["mon","tue","wed","thu","fri"],"open":"18:00","close":"22:00"},{"days":["sat"],"open":"11:00","close":"14:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"kaminogeJiro","instagram":null},
+  {"name":"環七一之江店","photo":"https://stat.ameba.jp/user_images/20240811/14/r55jcw/84/ec/j/o1080081015473481556.jpg","area":"東京都江戸川区/都営新宿線 一之江駅","hours":[{"days":["mon","tue","thu","fri"],"open":"10:30","close":"14:00"},{"days":["mon","tue","thu","fri"],"open":"17:30","close":"20:30"},{"days":["sat","sun"],"open":"09:00","close":"14:00"}],"closedDays":["wed"],"closedNote":"祝日は土日と同様の時間で営業との情報あり","source":"https://jiro-matome.com/store-info/","twitter":"ichinoejiro","instagram":null},
+  {"name":"神田神保町店","photo":"https://livedoor.blogimg.jp/musashinonikki/imgs/d/6/d672c801.jpg","area":"東京都千代田区/都営三田線 神保町駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:00","close":"17:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jbc_ramen_jiro","instagram":null},
+  {"name":"小岩店","photo":"https://mgmglabo.com/wp-content/uploads/2021/11/ramen-jiro-koiwajiro_0018-e1683335094746.jpg","area":"東京都江戸川区/JR小岩駅","hours":[{"days":["tue","wed","thu","fri"],"open":"10:30","close":"14:30"},{"days":["sat"],"open":"15:00","close":"16:30"}],"closedDays":["mon","sun"],"closedNote":"祝日休み。火〜金の閉店時刻は麺切れ次第のため14:00〜15:00頃が目安(14:30は目安値)。土曜は公式X予約制テイクアウトのみで受取15:00〜16:30(この時間帯は変動の可能性あり)","source":"https://x.com/koiwajiro","twitter":"koiwajiro","instagram":null},
+  {"name":"ひばりヶ丘駅前店","photo":"https://stat.ameba.jp/user_images/20220810/21/r55jcw/bf/8a/j/o1080081015158814507.jpg","area":"東京都西東京市/西武池袋線 ひばりヶ丘駅","hours":[{"days":["mon","tue","thu","fri"],"open":"11:30","close":"14:30"},{"days":["mon","tue","thu","fri"],"open":"18:00","close":"21:00"},{"days":["wed"],"open":"11:30","close":"14:30"},{"days":["sat"],"open":"11:00","close":"17:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"Aarf0xvdBXkWd7o","instagram":null},
+  {"name":"桜台駅前店","photo":"https://cdn-ak.f.st-hatena.com/images/fotolife/t/tamaokiyutaka/20180126/20180126114441.jpg","area":"東京都練馬区/西武池袋線 桜台駅","hours":[{"days":["mon","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","wed","thu","fri"],"open":"17:30","close":"21:00"},{"days":["sat","sun"],"open":"10:00","close":"16:00"}],"closedDays":["tue"],"closedNote":"祝日休み。※2025年3月頃に閉店したとの情報あり(要現地確認)","source":"https://jiro-matome.com/store-info/","twitter":null,"instagram":null},
+  {"name":"西台駅前店","photo":"https://stat.ameba.jp/user_images/20260510/22/r55jcw/19/5c/j/o1080078415780899621.jpg","area":"東京都板橋区/都営三田線 西台駅","hours":[{"days":["mon","tue","thu","fri"],"open":"11:00","close":"13:30"},{"days":["mon","tue","thu","fri"],"open":"17:30","close":"20:30"},{"days":["wed"],"open":"11:00","close":"13:30"},{"days":["sat"],"open":"09:30","close":"12:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_nishidai","instagram":null},
+  {"name":"一橋学園店","photo":"https://stat.ameba.jp/user_images/20251231/11/r55jcw/99/01/j/o1080081015735853045.jpg","area":"東京都小平市/西武多摩湖線 一橋学園駅","hours":[{"days":["mon","tue","wed","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","fri"],"open":"17:30","close":"20:30"},{"days":["sat"],"open":"11:00","close":"15:00"},{"days":["sun"],"open":"11:00","close":"16:00"}],"closedDays":["thu"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":"1284jiro","instagram":null},
+  {"name":"立川店","photo":"https://ikkos-films.com/wp-content/uploads/2025/12/img_0245.jpg","area":"東京都立川市/JR立川駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:00","close":"14:30"},{"days":["mon","tue","thu","fri","sat","sun"],"open":"17:30","close":"20:30"}],"closedDays":["wed"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jirotachikawa","instagram":"tachikawajiro"},
+  {"name":"千住大橋駅前店","photo":"https://livedoor.blogimg.jp/nazuna073/imgs/8/d/8d2fe613.jpg","area":"東京都足立区/京成本線 千住大橋駅","hours":[{"days":["mon","tue","wed","fri"],"open":"10:30","close":"15:30"}],"closedDays":["thu","sat","sun"],"closedNote":"祝日休み。土曜はテイクアウト販売のみとの情報あり","source":"https://www.ramenjiro-pleasure.com/info_senjuoohashiekimaejiro/","twitter":"senjujirou26","instagram":null},
+  {"name":"京急川崎店","photo":"https://livedoor.blogimg.jp/tabearukimasutango/imgs/d/d/dd767ff9.jpg","area":"神奈川県川崎市川崎区/京急本線 京急川崎駅、JR川崎駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"18:00","close":"22:00"},{"days":["sat"],"open":"11:00","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_kwsk_bot","instagram":null},
+  {"name":"相模大野店","photo":"https://stat.ameba.jp/user_images/20221021/21/r55jcw/b3/d5/j/o1080081015191616206.jpg","area":"神奈川県相模原市南区/小田急線 相模大野駅","hours":[{"days":["tue"],"open":"10:20","close":"14:00"},{"days":["wed","thu"],"open":"10:20","close":"14:00"},{"days":["wed","thu"],"open":"17:00","close":"20:30"},{"days":["fri"],"open":"17:00","close":"20:30"},{"days":["sat","sun"],"open":"10:00","close":"15:00"}],"closedDays":["mon"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"sumo_jiro","instagram":null},
+  {"name":"横浜関内店","photo":"https://stat.ameba.jp/user_images/20260201/14/r55jcw/ba/e3/j/o1080081015746660014.jpg","area":"神奈川県横浜市中区/JR根岸線 関内駅、伊勢佐木長者町駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:00","close":"14:30"},{"days":["mon","tue","thu","fri","sat","sun"],"open":"17:00","close":"21:00"}],"closedDays":["wed"],"closedNote":"祝日は営業(日曜同様の扱い)","source":"https://jiro-matome.com/store-info/","twitter":"kannaijiro","instagram":"kannaijiro"},
+  {"name":"中山駅前店","photo":"https://stat.ameba.jp/user_images/20250809/12/r55jcw/79/86/j/o1080081015648741482.jpg","area":"神奈川県横浜市緑区/JR横浜線 中山駅","hours":[{"days":["mon","tue","wed","fri","sat","sun"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","fri","sat","sun"],"open":"18:00","close":"21:30"}],"closedDays":["thu"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":"NKYMJIRO","instagram":null},
+  {"name":"生田店","photo":"https://cdn-ak.f.st-hatena.com/images/fotolife/s/saitamanoramen/20250427/20250427100941.jpg","area":"神奈川県川崎市多摩区/小田急線 生田駅","hours":[{"days":["mon","tue","thu","fri","sat","sun"],"open":"11:00","close":"15:00"},{"days":["mon","tue","thu","fri","sat","sun"],"open":"18:00","close":"21:00"}],"closedDays":["wed"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"ikuta_jiro","instagram":"ikuta_jiro"},
+  {"name":"湘南藤沢店","photo":"https://ikkos-films.com/wp-content/uploads/2025/11/img_8052.jpg","area":"神奈川県藤沢市/小田急線・JR藤沢駅","hours":[{"days":["mon","wed","thu","fri","sat"],"open":"11:00","close":"14:30"},{"days":["mon","wed","thu","fri","sat"],"open":"17:00","close":"21:00"},{"days":["sun"],"open":"11:00","close":"21:00"}],"closedDays":["tue"],"closedNote":null,"source":"https://note.com/koronkoro/n/n7846c0131bd0","twitter":"fujirow26","instagram":null},
+  {"name":"松戸駅前店","photo":"https://stat.ameba.jp/user_images/20251229/12/r55jcw/5d/ae/j/o1080081015735120163.jpg","area":"千葉県松戸市/JR松戸駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:30","close":"21:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"matsudojiro3","instagram":"mtdjiro"},
+  {"name":"京成大久保店","photo":"https://stat.ameba.jp/user_images/20260221/12/r55jcw/b4/39/j/o1080081015753214303.jpg","area":"千葉県船橋市/京成本線 京成大久保駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:00","close":"15:00"}],"closedDays":["sun"],"closedNote":"祝日休み。※公式X(@OKB26)は更新頻度が低い可能性があります","source":"https://jiro-matome.com/store-info/","twitter":"OKB26","instagram":null},
+  {"name":"柏店","photo":"https://stat.ameba.jp/user_images/20251110/12/r55jcw/df/66/j/o1080081015713269734.jpg","area":"千葉県柏市/つくばエクスプレス 柏の葉キャンパス駅","hours":[{"days":["tue","wed","thu","fri","sat","sun"],"open":"11:00","close":"15:00"},{"days":["tue","wed","thu","fri","sat","sun"],"open":"17:30","close":"21:30"}],"closedDays":["mon"],"closedNote":"時間は目安(公式が「頃」と表記しており前後する)","source":"https://jiro-matome.com/store-info/","twitter":"genkimoriya","instagram":null},
+  {"name":"千葉店","photo":"https://livedoor.blogimg.jp/hanadamasaru1976/imgs/6/0/60e52905.jpg","area":"千葉県千葉市中央区/千葉都市モノレール 葭川公園駅、JR千葉駅・千葉中央駅","hours":[{"days":["mon","tue","wed","thu","fri","sat"],"open":"11:00","close":"14:30"},{"days":["mon","tue","wed","thu","fri","sat"],"open":"17:00","close":"21:30"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_chiba","instagram":null},
+  {"name":"川越店","photo":"https://livedoor.blogimg.jp/kiyosuke0717/imgs/8/c/8c1232a6.jpg","area":"埼玉県川越市/JR・東武東上線 川越駅","hours":[{"days":["tue","wed","thu","fri","sat"],"open":"11:00","close":"14:00"},{"days":["tue","wed","thu","fri","sat"],"open":"18:00","close":"21:00"},{"days":["sun"],"open":"11:00","close":"14:00"}],"closedDays":["mon"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":"kwge26","instagram":null},
+  {"name":"越谷店","photo":"https://livedoor.blogimg.jp/ikemen7373/imgs/c/1/c1fec992.jpg","area":"埼玉県越谷市/東武スカイツリーライン 越谷駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:30","close":"19:00"}],"closedDays":["sat","sun"],"closedNote":"祝日は10:00-15:00で特別営業","source":"https://jiro-matome.com/store-info/","twitter":"ksgy26","instagram":null},
+  {"name":"大宮公園駅前店","photo":"https://livedoor.blogimg.jp/ikemen7373/imgs/9/f/9f4b965a.jpg","area":"埼玉県さいたま市大宮区/東武アーバンパークライン 大宮公園駅","hours":[{"days":["mon","tue","thu","fri","sat"],"open":"11:30","close":"14:30"},{"days":["mon","tue","thu","fri","sat"],"open":"17:30","close":"21:00"},{"days":["sun"],"open":"11:00","close":"15:00"}],"closedDays":["wed"],"closedNote":"祝日は日曜と同様の時間で営業","source":"https://jiro-matome.com/store-info/","twitter":"omiyapark26","instagram":null},
+  {"name":"栃木街道店","photo":"https://stat.ameba.jp/user_images/20241107/15/momojirou-tsurugi-666/7e/6a/j/o1080081015507214626.jpg","area":"栃木県下都賀郡壬生町","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:30","close":"14:45"},{"days":["mon","tue","wed","thu","fri"],"open":"18:00","close":"21:00"},{"days":["sat"],"open":"11:30","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"Tochigikaidoten","instagram":"tochigikaidoten2007"},
+  {"name":"前橋千代田町店","photo":"https://webdesign-gourmet.com/wp-content/uploads/ramen-jiro-maebashi-chiyodacho-gunma-01.jpg","area":"群馬県前橋市/上毛電鉄 中央前橋駅","hours":[{"days":["tue","fri","sat","sun"],"open":"10:30","close":"14:30"},{"days":["tue","fri","sat","sun"],"open":"17:00","close":"20:00"},{"days":["wed","thu"],"open":"10:30","close":"14:30"}],"closedDays":["mon"],"closedNote":"月曜定休(祝日時の振替休日は未確認)。水・木は昼の部のみで夜営業なしとの情報あり(情報源により火〜日一律2部制との記載もあり要確認)。材料切れの場合は早仕舞いあり","source":"https://x.com/SnBZt6eRCdz7lQw","twitter":"SnBZt6eRCdz7lQw","instagram":null},
+  {"name":"ひたちなか店","photo":"https://cdn-ak.f.st-hatena.com/images/fotolife/h/ho_po_vo_2019/20211224/20211224214340.jpg","area":"茨城県ひたちなか市/JR勝田駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:30"},{"days":["mon","tue","wed","thu","fri"],"open":"17:30","close":"21:00"},{"days":["sat"],"open":"10:00","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日は土曜と同様の時間で営業","source":"https://jiro-matome.com/store-info/","twitter":"26_hitachinaka","instagram":null},
+  {"name":"仙台店","photo":"https://webdesign-gourmet.com/wp-content/uploads/jirou-sendai-ramen-01.jpg","area":"宮城県仙台市/地下鉄東西線 大町西公園駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:30","close":"14:30"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"11:30","close":"21:00"},{"days":["sun"],"open":"11:30","close":"19:30"}],"closedDays":[],"closedNote":"基本無休。祝日は日曜と同様の時間で営業","source":"https://jiro-matome.com/store-info/","twitter":"jiro_sendai1023","instagram":"jiro_sendai"},
+  {"name":"札幌店","photo":"https://stat.ameba.jp/user_images/20250517/14/ykk2-hobby/f0/97/j/o3264244815596915128.jpg","area":"北海道札幌市/JR札幌駅、地下鉄さっぽろ駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"20:30"},{"days":["sat"],"open":"11:00","close":"15:00"}],"closedDays":["sun"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_sapporo_","instagram":null},
+  {"name":"会津若松駅前店","photo":"https://stat.ameba.jp/user_images/20260220/11/r55jcw/90/a4/j/o1080081015752902696.jpg","area":"福島県会津若松市/JR会津若松駅","hours":[{"days":["tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"11:00","close":"20:00"}],"closedDays":["mon"],"closedNote":"日曜・祝日は基本休みだが第2・4日曜のみ11:00-20:00で特別営業(不定休寄り)","source":"https://jiro-matome.com/store-info/","twitter":"aizu_jiro","instagram":"aizu_jiro26"},
+  {"name":"新潟店","photo":"https://livedoor.blogimg.jp/hanadamasaru1976/imgs/e/b/eb1d6db8.jpg","area":"新潟県新潟市/JR新潟駅","hours":[{"days":["tue","wed","fri"],"open":"11:00","close":"14:00"},{"days":["tue","wed","fri"],"open":"16:30","close":"21:00"},{"days":["sat","sun"],"open":"10:00","close":"15:30"}],"closedDays":["mon","thu"],"closedNote":null,"source":"https://jiro-matome.com/store-info/","twitter":null,"instagram":"jiro.niigata"},
+  {"name":"京都店","photo":"https://livedoor.blogimg.jp/hanadamasaru1976/imgs/f/e/fe2f6eaa.jpg","area":"京都府京都市左京区/叡山電鉄 一乗寺駅","hours":[{"days":["mon","tue","thu","fri","sat"],"open":"11:00","close":"14:00"},{"days":["mon","tue","thu","fri","sat"],"open":"18:00","close":"21:30"},{"days":["sun"],"open":"11:00","close":"14:30"},{"days":["sun"],"open":"17:30","close":"20:30"}],"closedDays":["wed"],"closedNote":"祝日休み","source":"https://jiro-matome.com/store-info/","twitter":"jiro_kyoto","instagram":null},
+  {"name":"朝倉街道駅前店","photo":"https://livedoor.blogimg.jp/hanadamasaru1976/imgs/0/9/098ce0c5.jpg","area":"福岡県筑紫野市/西鉄天神大牟田線 朝倉街道駅","hours":[{"days":["mon","tue","wed","fri","sat"],"open":"11:30","close":"14:30"},{"days":["mon","tue","wed","fri","sat"],"open":"17:30","close":"20:30"},{"days":["sun"],"open":"11:30","close":"14:30"}],"closedDays":["thu"],"closedNote":"祝日休み。2024年12月開業の九州初直系店","source":"https://jiro-matome.com/store-info/","twitter":"r26akgd","instagram":null},
+  {"name":"名古屋大曽根店","photo":"https://stat.ameba.jp/user_images/20260425/11/r55jcw/f7/44/j/o1080081015775028986.jpg","area":"愛知県名古屋市東区/JR中央本線・地下鉄名城線 大曽根駅","hours":[{"days":["mon","tue","wed","thu","fri"],"open":"11:00","close":"14:00"},{"days":["mon","tue","wed","thu","fri"],"open":"17:00","close":"21:00"},{"days":["sat"],"open":"10:00","close":"16:00"}],"closedDays":["sun"],"closedNote":"祝日は土曜と同様の時間で営業。2025年11月開業の東海初直系店","source":"https://iekei.shop/jiro-ramen-shop-list","twitter":"jiro_NGY","instagram":null}
 ];
 
 function timeToMinutes(t){
@@ -519,27 +578,40 @@ function evaluateShop(shop, ctx){
   return 'closed';
 }
 
+function handlePhotoError(img){
+  const box = img.closest('.card-photo');
+  if(box) box.innerHTML = '<div class="photo-placeholder">🍜</div>';
+}
+
 function renderCard(shop){
   const li = document.createElement('li');
   li.className = 'shop-card';
   li.dataset.name = shop.name;
   li.dataset.area = shop.area || '';
   const igHandle = shop.instagram ? shop.instagram.replace(/^@/, '') : null;
+  const photoInner = shop.photo
+    ? `<img src="${shop.photo}" alt="${shop.name}のラーメン" loading="lazy" referrerpolicy="no-referrer" onerror="handlePhotoError(this)">`
+    : `<div class="photo-placeholder">🍜</div>`;
   li.innerHTML = `
-    <div class="card-top">
-      <span class="dot"></span>
-      <h3 class="shop-name">${shop.name}</h3>
+    <div class="shop-card-inner">
+      <div class="card-content">
+        <div class="card-top">
+          <span class="dot"></span>
+          <h3 class="shop-name">${shop.name}</h3>
+        </div>
+        <p class="shop-area">${shop.area || ''}</p>
+        <p class="shop-hours">${formatHours(shop)}</p>
+        <p class="shop-closed">${formatClosed(shop)}</p>
+        <div class="card-links">
+          <button type="button" class="map-toggle" data-query="${encodeURIComponent('ラーメン二郎 ' + shop.name + ' ' + (shop.area || '').split('/')[0])}">📍 地図を見る</button>
+          ${shop.twitter ? `<a class="sns-toggle" href="https://x.com/${shop.twitter}" target="_blank" rel="noopener">𝕏 最新投稿を見る</a>` : ''}
+          ${(!shop.twitter && igHandle) ? `<a class="sns-link" href="https://www.instagram.com/${igHandle}/" target="_blank" rel="noopener">Instagramで確認</a>` : ''}
+          ${(!shop.twitter && !igHandle) ? `<span class="sns-none">公式SNS未確認</span>` : ''}
+        </div>
+        <div class="map-embed" hidden></div>
+      </div>
+      <div class="card-photo">${photoInner}</div>
     </div>
-    <p class="shop-area">${shop.area || ''}</p>
-    <p class="shop-hours">${formatHours(shop)}</p>
-    <p class="shop-closed">${formatClosed(shop)}</p>
-    <div class="card-links">
-      <button type="button" class="map-toggle" data-query="${encodeURIComponent('ラーメン二郎 ' + shop.name + ' ' + (shop.area || '').split('/')[0])}">📍 地図を見る</button>
-      ${shop.twitter ? `<a class="sns-toggle" href="https://x.com/${shop.twitter}" target="_blank" rel="noopener">𝕏 最新投稿を見る</a>` : ''}
-      ${(!shop.twitter && igHandle) ? `<a class="sns-link" href="https://www.instagram.com/${igHandle}/" target="_blank" rel="noopener">Instagramで確認</a>` : ''}
-      ${(!shop.twitter && !igHandle) ? `<span class="sns-none">公式SNS未確認</span>` : ''}
-    </div>
-    <div class="map-embed" hidden></div>
   `;
   return li;
 }
